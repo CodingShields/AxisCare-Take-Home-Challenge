@@ -26,3 +26,4 @@ $statement = $customer->statement();
 echo '<pre>';
 echo $statement;
 echo '</pre>';
+

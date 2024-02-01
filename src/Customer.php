@@ -1,4 +1,5 @@
 <?php
+//  Need to change statement per the new methods in Movie.php
 
 class Customer
 {
@@ -33,7 +34,7 @@ class Customer
             switch ($rental->getMovie()->getPriceCode()) {
                 case Movie::REGULAR:
                     $thisAmount += 2;
-                    if($rental->getDaysRented() > 2)
+                    if ($rental->getDaysRented() > 2)
                         $thisAmount += ($rental->getDaysRented() - 2) * 1.5;
                     break;
                 case Movie::NEW_RELEASE:
@@ -41,8 +42,8 @@ class Customer
                     break;
                 case Movie::CHILDRENS:
                     $thisAmount += 1.5;
-                    if($rental->getDaysRented() > 3)
-                        $thisAmount += ($rental->getDaysRented() - 3) *1.5;
+                    if ($rental->getDaysRented() > 3)
+                        $thisAmount += ($rental->getDaysRented() - 3) * 1.5;
                     break;
             }
 
@@ -50,19 +51,22 @@ class Customer
             $frequentRenterPoints++;
 
             // add bonus for a two day new release rental
-            if (($rental->getMovie()->getPriceCode() == Movie::NEW_RELEASE) &&
-                    $rental->getDaysRented() > 1) $frequentRenterPoints++;
+            if (
+                ($rental->getMovie()->getPriceCode() == Movie::NEW_RELEASE) &&
+                $rental->getDaysRented() > 1
+            )
+                $frequentRenterPoints++;
 
             // show figures for this rental
             $result .= "\t" . $rental->getMovie()->getTitle() . "\t" .
-                        $thisAmount . "\n";
+                $thisAmount . "\n";
             $totalAmount += $thisAmount;
         }
-
-        // add footer lines
+        // Add H1 header with italics for the customer name
+// footer lines should each be in their own <p> elements
         $result .= "Amount owed is " . $totalAmount . "\n";
         $result .= "You earned " . $frequentRenterPoints .
-                " frequent renter points";
+            " frequent renter points";
 
         return $result;
     }

@@ -1,5 +1,5 @@
 <?php
-
+//Need to add different functions so new classifications can be added
 class Movie
 {
     const CHILDRENS = 2;

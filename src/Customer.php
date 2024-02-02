@@ -1,6 +1,4 @@
 <?php
-//  Need to change statement per the new methods in Movie.php
-
 class Customer
 {
     private $name;
@@ -20,134 +18,52 @@ class Customer
     {
         return $this->name;
     }
-
     public function statement(): string
     {
-        $totalAmount = 0;
+        $totalAmount = 0.00;
         $frequentRenterPoints = 0;
-        $result = "Rental Record for " . $this->getName() . "\n";
+        $result = "<p>Rental Record: <span class='underline'>" . $this->getName() . "</span>\n";
 
-//         // determine amounts for each line
-//         foreach ($this->rentals as $rental) {
-//             $thisAmount = 0;
+        foreach ($this->rentals as $rental) {
+            $thisAmount = $rental->getMovie()->getCharge($rental->getDaysRented());
 
-//             switch ($rental->getMovie()->getPriceCode()) {
-//                 case Movie::REGULAR:
-//                     $thisAmount += 2;
-//                     if ($rental->getDaysRented() > 2)
-//                         $thisAmount += ($rental->getDaysRented() - 2) * 1.5;
-//                     break;
-//                 case Movie::NEW_RELEASE:
-//                     $thisAmount += $rental->getDaysRented() * 3;
-//                     break;
-//                 case Movie::CHILDRENS:
-//                     $thisAmount += 1.5;
-//                     if ($rental->getDaysRented() > 3)
-//                         $thisAmount += ($rental->getDaysRented() - 3) * 1.5;
-//                     break;
-//             }
+            $frequentRenterPoints += $rental->getMovie()->getFrequentRenterPoints($rental->getDaysRented());
 
-//             // add frequent renter points
-//             $frequentRenterPoints++;
+            $result .= "\t<p class='h-2 text-blue-700 '> \t" . $rental->getMovie()->getTitle() . "\t" . $thisAmount . "</p>\n";
 
-//             // add bonus for a two day new release rental
-//             if (
-//                 ($rental->getMovie()->getPriceCode() == Movie::NEW_RELEASE) &&
-//                 $rental->getDaysRented() > 1
-//             )
-//                 $frequentRenterPoints++;
-
-//             // show figures for this rental
-//             $result .= "\t" . $rental->getMovie()->getTitle() . "\t" .
-//                 $thisAmount . "\n";
-//             $totalAmount += $thisAmount;
-//         }
-//         // Add H1 header with italics for the customer name
-// // footer lines should each be in their own <p> elements
-//         $result .= "Amount owed is " . $totalAmount . "\n";
-//         $result .= "You earned " . $frequentRenterPoints .
-//             " frequent renter points";
-
-//         return $result;
-//     }
-interface PriceCodeStrategy {
-    public function getCharge(int $daysRented): float;
-    public function getFrequentRenterPoints(int $daysRented): int;
-}
-
-class RegularPriceCodeStrategy implements PriceCodeStrategy {
-    public function getCharge(int $daysRented): float {
-        $result = 2;
-        if ($daysRented > 2) {
-            $result += ($daysRented - 2) * 1.5;
+            $totalAmount += $thisAmount;
         }
+        $result .= "Amount Due:" . "<span class='text-red-500'>\t$" . $totalAmount . "</span>\n";
+        $result .= "Customer frequent renter points:" . "<span class='text-red-500'>" . $frequentRenterPoints . "</span>\n";
+
         return $result;
     }
+    public function htmlStatement(): string
+    {
+        $totalAmount = 0.00;
+        $frequentRenterPoints = 0.00;
 
-    public function getFrequentRenterPoints(int $daysRented): int {
-        return 1;
-    }
-}
+        $result = "
+        
+        <h1 class='text-3xl text-center'>Rental Record for <span class='italic'>" . $this->getName() . "</span></h1><br>";
 
-class NewReleasePriceCodeStrategy implements PriceCodeStrategy {
-    public function getCharge(int $daysRented): float {
-        return $daysRented * 3;
-    }
+        foreach ($this->rentals as $rental) {
+            $thisAmount = $rental->getMovie()->getCharge($rental->getDaysRented());
 
-    public function getFrequentRenterPoints(int $daysRented): int {
-        return ($daysRented > 1) ? 2 : 1;
-    }
-}
+            $frequentRenterPoints += $rental->getMovie()->getFrequentRenterPoints($rental->getDaysRented());
 
-class ChildrensPriceCodeStrategy implements PriceCodeStrategy {
-    public function getCharge(int $daysRented): float {
-        $result = 1.5;
-        if ($daysRented > 3) {
-            $result += ($daysRented - 3) * 1.5;
+            $result .= "<p class='text-center'>" . $rental->getMovie()->getTitle() . " - " . $thisAmount . "</p><br>";
+
+            $totalAmount += $thisAmount;
         }
+
+        $result .= "
+        <div
+        class='bg-gray-200 flex flex-col p-4 my-0 justify-start items-start text-start w-max mx-auto border-2 border-black rounded-lg'  
+        >
+        <p>Amount Due: <em> " . $totalAmount . "</em></p></div><br>";
+        $result .= "<p>You earned <em>" . $frequentRenterPoints . "</em> frequent renter points</p>";
+
         return $result;
     }
-
-    public function getFrequentRenterPoints(int $daysRented): int {
-        return 1;
-    }
-}
-class ClassicPriceCodeStrategy implements PriceCodeStrategy {
-    public function getCharge(int $daysRented): float {
-        $result = 2;
-        if ($daysRented > 2) {
-            $result += ($daysRented - 2) * 1.5;
-        }
-        return $result;
-    }
-
-    public function getFrequentRenterPoints(int $daysRented): int {
-        return ($daysRented > 10) ? 2 : 1;
-    }
-}
-class Movie {
-    private $title;
-    private $priceCodeStrategy;
-
-    public function __construct(string $title, PriceCodeStrategy $priceCodeStrategy) {
-        $this->title = $title;
-        $this->priceCodeStrategy = $priceCodeStrategy;
-    }
-
-    public function getCharge(int $daysRented): float {
-        return $this->priceCodeStrategy->getCharge($daysRented);
-    }
-
-    public function getFrequentRenterPoints(int $daysRented): int {
-        return $this->priceCodeStrategy->getFrequentRenterPoints($daysRented);
-    }
-
-    public function getTitle(): string {
-        return $this->title;
-    }
-
-    public function setPriceCodeStrategy(PriceCodeStrategy $priceCodeStrategy) {
-        $this->priceCodeStrategy = $priceCodeStrategy;
-    }
-}
 }

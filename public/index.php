@@ -1,12 +1,12 @@
 <html>
 
 <head>
-  <title>Refactoring</title>
+  <title>Axis Movie Rental </title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
 </head>
 
 
-<body>
+<body class="bg-green-400">
 
   <?php
   $codedir = __DIR__ . '/../src';
@@ -29,12 +29,10 @@
   $statement = $customer->statement();
   $movie = new Movie("Some Classic Movie", new ClassicPriceCodeStrat());
   echo '<pre>';
-  echo '<div class="bg-green-200 flex flex-col space-y-0 justify-center w-full border-b-green-600 border-4">';
-  echo ' <h1 class="text-3xl font-sans text-center py-0 my-8 ">Axis Care Movie Rental<h1>';
-  echo '<div
-  class="shadow-black shadow-2xl bg-gray-200 flex flex-col p-8 my-0 justify-start items-start text-start w-max mx-auto border-2 border-black rounded-lg"
-  >
-  <h1 class="text-lg text-start">' . $statement . '</h1>
+  echo '<div">
+  <div class="shadow-black shadow-2xl bg-gray-200 flex flex-col p-8  text-start w-max mx-auto border-4 border-black rounded-lg">
+  <h1 class="text-3xl font-sans text-center h-2">Axis Care Movie Rental<h1>
+  <div class="text-lg text-start h-max ">' . $statement . '</div>
   </div>
   </div>';
 

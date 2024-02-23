@@ -1,14 +1,14 @@
 <html>
 
 <head>
-  <title>Axis Movie Rental </title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
+    <title>Axis Movie Rental </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
 </head>
 
 
 <body class="bg-green-400">
 
-  <?php
+    <?php
   $codedir = __DIR__ . '/../src';
   require_once("$codedir/Movie.php");
   require_once("$codedir/Customer.php");
@@ -27,14 +27,10 @@
 
   // Generate the customer's statement
   $statement = $customer->statement();
-  $movie = new Movie("Some Classic Movie", new ClassicPriceCodeStrat());
+
   echo '<pre>';
-  echo '<div">
-  <div class="shadow-black shadow-2xl bg-gray-200 flex flex-col p-8  text-start w-max mx-auto border-4 border-black rounded-lg">
-  <h1 class="text-3xl font-sans text-center h-2">Axis Care Movie Rental<h1>
-  <div class="text-lg text-start h-max ">' . $statement . '</div>
-  </div>
-  </div>';
+
+  echo $statement;
 
   echo '</pre>';
 
